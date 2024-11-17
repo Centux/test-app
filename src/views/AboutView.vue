@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="about" style="text-align: center;">
     <h1>centux@gmail.com</h1>
   </div>
 </template>
