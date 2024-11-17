@@ -12,7 +12,7 @@ import { io } from "socket.io-client";
       <HelloWorld msg="You crack it!" />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/">Counter</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
