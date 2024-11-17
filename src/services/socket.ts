@@ -34,26 +34,29 @@ export function initializeSocket() {
   });
 
   // Verificar si el evento RAW llega correctamente
-  socket.on('RAW', (data: any) => {
+  socket.on('raw', (data: any) => {
     console.log('Recibido desde el servidor:', data); // Verificar los datos
 
     // Validar si los datos tienen el formato esperado
-    if (data && data.count !== undefined) {
-      counterStore.setCount(data.count);  // Actualiza el contador en el store
+    if (data && data.counting_in !== undefined) {
+      counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
     } else {
       console.warn('Datos inesperados:', data); // Si los datos no son lo esperado, muestra una advertencia
     }
   });
 
-  socket.on('WELCOME', (data: any) => {
+  socket.on('welcome', (data: any) => {
     console.log('Conexión establecida:', data);
+    if (data && data.counting_in !== undefined) {
+      counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
+    }
   });
 
-  socket.on('SUMMARY', (data: any) => {
+  socket.on('summary', (data: any) => {
     console.log('Resumen:', data);
   });
 
-  socket.on('HEARTBEAT', (data: any) => {
+  socket.on('heartbeat', (data: any) => {
     console.log('Latido:', data);
   });
 }
