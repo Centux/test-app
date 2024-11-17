@@ -7,6 +7,7 @@ const apiUrl = 'https://ikcount.com/iklab/ikcount/api/counting/command?atoken=Y2
 export const useCounterStore = defineStore('counter', {
   state: () => ({
     count: 0,
+    count_out: 0,
     client: 'DEMO001',
     location: 'DEMO001A1L1',
     macAddress: 'DEMO001A1L1Z1MC4',
@@ -15,6 +16,9 @@ export const useCounterStore = defineStore('counter', {
   actions: {
     setCount(count: number) {
       this.count = count;  // Actualiza el contador con el valor recibido
+    },
+    setCountOut(count_out: number) {
+      this.count_out = count_out;  // Actualiza el contador con el valor recibido
     },
     setSocketStatus(status: boolean) {
       this.isSocketConnected = status; // Actualiza el estado de la conexión

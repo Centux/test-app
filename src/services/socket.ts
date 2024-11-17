@@ -37,18 +37,25 @@ export function initializeSocket() {
   socket.on('raw', (data: any) => {
     console.log('Recibido desde el servidor:', data); // Verificar los datos
 
-    // Validar si los datos tienen el formato esperado
     if (data && data.counting_in !== undefined) {
       counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
+    } else {
+      console.warn('Datos inesperados:', data); // Si los datos no son lo esperado, muestra una advertencia
+    }
+    if (data && data.counting_out !== undefined) {
+      counterStore.setCountOut(data.counting_out);  // Actualiza el contador en el store
     } else {
       console.warn('Datos inesperados:', data); // Si los datos no son lo esperado, muestra una advertencia
     }
   });
 
   socket.on('welcome', (data: any) => {
-    console.log('Conexión establecida:', data);
+    console.log('Conexión establecida:', data, data.counting_out);
     if (data && data.counting_in !== undefined) {
       counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
+    }
+    if (data && data.counting_out !== undefined) {
+      counterStore.setCountOut(data.counting_out);  // Actualiza el contador en el store
     }
   });
 

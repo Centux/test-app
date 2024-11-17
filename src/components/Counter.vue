@@ -3,7 +3,8 @@
   <div class="flex flex-col items-center justify-center space-y-4 counter-container">
     <h1 class="text-3xl font-bold">Contador de Personas</h1>
     
-    <p>Personas en el contador: {{ count }}</p>
+    <p>Personas en el contador IN: {{ count }}</p>
+    <p>Personas en el contador OUT: {{ count_out }}</p>
     
     <div class="flex space-x-4 buttons">
       <button
@@ -41,6 +42,7 @@ onUnmounted(() => {
 
 // Usar computed para asegurar la reactividad
 const count = computed(() => counterStore.count);
+const count_out = computed(() => counterStore.count_out);
 const isSocketConnected = computed(() => counterStore.isSocketConnected);
 
 // Acciones para incrementar o decrementar el contador
