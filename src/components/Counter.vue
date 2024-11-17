@@ -1,57 +1,51 @@
+<!-- src/components/Counter.vue -->
 <template>
-  <div class="counter-container">
-      <h1>Contador de Personas</h1>
-      <p>Personas en el contador: {{ count }}</p>
-      <div class="buttons">
-        <button @click="increase">Añadir Persona</button>
-        <button @click="decrease">Quitar Persona</button>
-      </div>
+  <div class="flex flex-col items-center justify-center space-y-4 counter-container">
+    <h1 class="text-3xl font-bold">Contador de Personas</h1>
+    
+    <p>Personas en el contador: {{ count }}</p>
+    
+    <div class="flex space-x-4 buttons">
+      <button
+        @click="incrementCount"
+        class="bg-green-500 text-white px-4 py-2 rounded-lg"
+      >
+        Sumar
+      </button>
+      <button
+        @click="decrementCount"
+        class="bg-red-500 text-white px-4 py-2 rounded-lg"
+      >
+        Restar
+      </button>
     </div>
-
+  </div>
 </template>
 
-<script>
-import { useCounterStore } from '../stores/counter.js';
-import { listenForEvents } from '../services/socket';
-import { onMounted, onBeforeUnmount, ref } from 'vue';
+<script setup>
+import { onMounted, computed, onUnmounted } from 'vue';
+import { useCounterStore } from '../stores/store';
+import { initializeSocket, disconnectSocket } from '../services/socket';
 
-export default {
-  name: 'home',
-  setup() {
-    const counterStore = useCounterStore();
-    const socketData = ref('');
+// Usamos el store de Pinia
+const counterStore = useCounterStore();
 
-    const increase = async () => {
-      await counterStore.increase();
-    };
+// Iniciar la conexión al socket
+onMounted(() => {
+  initializeSocket();
+});
 
-    const decrease = async () => {
-      await counterStore.decrease();
-    };
+onUnmounted(() => {
+  disconnectSocket();  // Desconectar la conexión
+});
 
-    onMounted(() => {
-      listenForEvents((data) => {
-        socketData.value = JSON.stringify(data);
-        console.log('event', JSON.stringify(data));
-        if (data && data.count !== undefined) {
-          counterStore.setCount(data.count);
-        }
-      });
-    });
+// Usar computed para asegurar la reactividad
+const count = computed(() => counterStore.count);
+const isSocketConnected = computed(() => counterStore.isSocketConnected);
 
-    onBeforeUnmount(() => {
-      // Aquí podemos cerrar la conexión si es necesario
-      // closeConnection();
-    });
-
-    return {
-      count: counterStore.count,
-      increase,
-      decrease,
-      socketData,
-    };
-  },
-};
+// Acciones para incrementar o decrementar el contador
+const incrementCount = counterStore.incrementCount;
+const decrementCount = counterStore.decrementCount;
 </script>
 
 <style scoped>
@@ -110,3 +104,4 @@ h3 {
   }
 }
 </style>
+

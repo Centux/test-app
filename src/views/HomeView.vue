@@ -3,14 +3,8 @@
   <div class="flex flex-col items-center justify-center space-y-4 counter-container">
     <h1 class="text-3xl font-bold">Contador de Personas</h1>
     
-    <!-- Verifica la conexión -->
-    <!-- <div v-if="!isSocketConnected" class="text-red-500">Conexión con el servidor en vivo no establecida.</div>
-    <div v-else class="text-green-500">Conexión establecida.</div> -->
-    
-    <!-- Mostrar contador -->
     <p>Personas en el contador: {{ count }}</p>
     
-    <!-- Botones para interactuar con el contador -->
     <div class="flex space-x-4 buttons">
       <button
         @click="incrementCount"
@@ -26,6 +20,7 @@
       </button>
     </div>
   </div>
+
 </template>
 
 <script setup>
@@ -33,7 +28,6 @@ import { onMounted, computed, onUnmounted } from 'vue';
 import { useCounterStore } from '../stores/store';
 import { initializeSocket, disconnectSocket } from '../services/socket';
 
-// Usamos el store de Pinia
 const counterStore = useCounterStore();
 
 // Iniciar la conexión al socket
