@@ -36,7 +36,6 @@ export function initializeSocket() {
   // Verificar si el evento RAW llega correctamente
   socket.on('raw', (data: any) => {
     console.log('Recibido desde el servidor:', data); // Verificar los datos
-
     if (data && data.counting_in !== undefined) {
       counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
     } else {
@@ -51,12 +50,8 @@ export function initializeSocket() {
 
   socket.on('welcome', (data: any) => {
     console.log('Conexión establecida:', data, data.counting_out);
-    if (data && data.counting_in !== undefined) {
-      counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
-    }
-    if (data && data.counting_out !== undefined) {
-      counterStore.setCountOut(data.counting_out);  // Actualiza el contador en el store
-    }
+    counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
+    counterStore.setCountOut(data.counting_out);  // Actualiza el contador en el store
   });
 
   socket.on('summary', (data: any) => {
@@ -65,6 +60,8 @@ export function initializeSocket() {
 
   socket.on('heartbeat', (data: any) => {
     console.log('Latido:', data);
+    counterStore.setCount(data.counting_in);
+    counterStore.setCountOut(data.counting_out); 
   });
 }
 

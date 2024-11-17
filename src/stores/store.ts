@@ -25,12 +25,10 @@ export const useCounterStore = defineStore('counter', {
     },
     async incrementCount() {
       await this.sendCommand('manual-add', 1);
-      this.count += 1;
     },
     async decrementCount() {
       if (this.count > 0) {
         await this.sendCommand('manual-sub', 1);
-        this.count -= 1;
       }
     },
     async sendCommand(command: string, quantity: number) {
