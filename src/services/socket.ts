@@ -10,19 +10,18 @@ let socket: Socket | null = null;  // Declaramos una variable socket que se inic
 export function initializeSocket() {
   if (socket) return;  // Evitar reconectar si ya está conectado
 
-  // // Conectar el socket
-  // socket = io(`${socketUrl}/live?atoken=${accessToken}`, {
-  //   transports: ['websocket', 'polling'], // Usar WebSocket o Polling
-  // });
   socket = io(socketUrl, {
     query: { atoken: accessToken },
     transports: ['websocket', 'polling'],
   });
 
-
   const counterStore = useCounterStore();
 
-  // Manejo de eventos del socket
+  const updateStore = (data: any) => {
+    counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
+    counterStore.setCountOut(data.counting_out);  // Actualiza el contador en el store
+  }
+
   socket.on('connect', () => {
     console.log('Conectado a Socket.IO');
     counterStore.setSocketStatus(true);  // Actualizamos el estado del socket
@@ -33,25 +32,14 @@ export function initializeSocket() {
     counterStore.setSocketStatus(false);  // Actualizamos el estado cuando se desconecta
   });
 
-  // Verificar si el evento RAW llega correctamente
   socket.on('raw', (data: any) => {
     console.log('Recibido desde el servidor:', data); // Verificar los datos
-    if (data && data.counting_in !== undefined) {
-      counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
-    } else {
-      console.warn('Datos inesperados:', data); // Si los datos no son lo esperado, muestra una advertencia
-    }
-    if (data && data.counting_out !== undefined) {
-      counterStore.setCountOut(data.counting_out);  // Actualiza el contador en el store
-    } else {
-      console.warn('Datos inesperados:', data); // Si los datos no son lo esperado, muestra una advertencia
-    }
+    updateStore(data);
   });
 
   socket.on('welcome', (data: any) => {
     console.log('Conexión establecida:', data, data.counting_out);
-    counterStore.setCount(data.counting_in);  // Actualiza el contador en el store
-    counterStore.setCountOut(data.counting_out);  // Actualiza el contador en el store
+    updateStore(data);
   });
 
   socket.on('summary', (data: any) => {
@@ -60,8 +48,7 @@ export function initializeSocket() {
 
   socket.on('heartbeat', (data: any) => {
     console.log('Latido:', data);
-    counterStore.setCount(data.counting_in);
-    counterStore.setCountOut(data.counting_out); 
+    updateStore(data);
   });
 }
 
