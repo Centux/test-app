@@ -42,3 +42,10 @@ export function initializeSocket() {
     console.log('Latido:', data);
   });
 }
+
+export function disconnectSocket() {
+  if (socket) {
+    socket.disconnect();
+    console.log('Socket desconectado');
+  }
+}

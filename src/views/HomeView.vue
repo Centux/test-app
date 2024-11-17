@@ -5,8 +5,8 @@
     
     <!-- Verifica la conexión -->
     <!-- <div v-if="!isSocketConnected" class="text-red-500">Conexión con el servidor en vivo no establecida.</div>
-    <div v-else class="text-green-500">Conexión establecida.</div>
-     -->
+    <div v-else class="text-green-500">Conexión establecida.</div> -->
+    
     <!-- Mostrar contador -->
     <p>Personas en el contador: {{ count }}</p>
     
@@ -29,9 +29,9 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, onUnmounted } from 'vue';
 import { useCounterStore } from '../stores/store';
-import { initializeSocket } from '../services/socket';
+import { initializeSocket, disconnectSocket } from '../services/socket';
 
 // Usamos el store de Pinia
 const counterStore = useCounterStore();
@@ -39,6 +39,10 @@ const counterStore = useCounterStore();
 // Iniciar la conexión al socket
 onMounted(() => {
   initializeSocket();
+});
+
+onUnmounted(() => {
+  disconnectSocket();  // Desconectar la conexión
 });
 
 // Usar computed para asegurar la reactividad
